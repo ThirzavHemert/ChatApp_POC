@@ -4,7 +4,7 @@ import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { StreamComponent } from './stream/stream.component';
 
 const routes: Routes = [
-  {path: 'stream', pathMatch: 'full', component: StreamComponent},
+  {path: 'stream/:id', pathMatch: 'full', component: StreamComponent},
    {path: 'chat/:id', pathMatch: 'full', component: ChatRoomComponent},
 ];
 

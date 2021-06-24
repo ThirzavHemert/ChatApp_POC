@@ -13,14 +13,14 @@ export class ChatService {
     this.socket = io(this.url);
    }
 
-   public sendMessage(message, room){
-     console.log("Service sendMessages called", message, ' in ', room)
-    this.socket.emit('new-message', message, room);
+   public sendMessage(data){
+     console.log('Service sendMessages called', data)
+     this.socket.emit('new-message', data);
   }
 
   joinRoom(data)
     {
-      console.log("Joinroom", data.user, data.room);
+      console.log('Joinroom', data.user, data.room);
       this.socket.emit('join', data.user, data.room);
     }
 
@@ -36,14 +36,25 @@ export class ChatService {
         return observable;
     }
 
-  public getMessages = () => {
-    console.log("Service getMessages called")
-        return Observable.create((observer) => {
-          console.log("Service in observable")
-            this.socket.on('goMessage', (message) => {
-              console.log("messgae: ", message)
-                observer.next(message);
+    public getMessages = () => {
+        let observable = new Observable<{user:String, message:String}>(observer=>{
+            this.socket.on('goMessage', (data)=>{
+                observer.next(data);
             });
+            return () => {this.socket.disconnect();}
         });
+
+        return observable;
     }
+
+  // public getMessages = () => {
+  //   console.log('Service getMessages called')
+  //   return Observable.create((observer) => {
+  //         console.log("Service in observable")
+  //         this.socket.on('goMessage', (message) => {
+  //             console.log("messgae: ", message)
+  //             observer.next(message);
+  //           });
+  //       });
+  //   }
 }
